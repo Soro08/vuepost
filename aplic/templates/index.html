@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Froala Design Blocks - Skeleton</title>
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+    <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-design-blocks/2.0.1/css/froala_blocks.min.css">
+    <style>
+        .lds-dual-ring {
+        display: inline-block;
+        width: 64px;
+        height: 64px;
+        }
+        .lds-dual-ring:after {
+        content: " ";
+        display: block;
+        width: 46px;
+        height: 46px;
+        margin: 1px;
+        border-radius: 50%;
+        border: 5px solid #fff;
+        border-color: #631515 transparent rgb(46, 23, 23) transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
+        }
+        @keyframes lds-dual-ring {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+        }
+        .btn-primary.focus, .btn-primary:focus,.btn-primary:active,
+        textarea:focus, 
+        textarea.form-control:focus, 
+        input.form-control:focus, 
+        input[type=text]:focus, 
+        input[type=password]:focus, 
+        input[type=email]:focus, 
+        input[type=number]:focus, 
+        [type=text].form-control:focus, 
+        [type=password].form-control:focus, 
+        [type=email].form-control:focus, 
+        [type=tel].form-control:focus, 
+        [contenteditable].form-control:focus {
+        box-shadow: inset 0 -1px 0 #ddd;
+        }
+
+    </style>
+</head>
+
+<body >
+    <!-- Insert HTML for contents. -->
+
+    <section id="app" class="fdb-block" style="background-image: url(https://cdn.pixabay.com/photo/2016/02/18/19/25/pc-1207886_1280.jpg); height: 100vh;">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <button v-if="login" v-on:click="isregister" class="btn btn-primary" type="button">Login</button>
+                    <button v-if="register" v-on:click="islogin" class="btn btn-primary" type="button">Register</button>
+                    <hr>
+                </div>
+                
+                
+            </div>
+            <div class="row justify-content-center">
+                    
+                <div v-if="register" class="col-12 col-md-8 col-lg-7 col-md-5 text-center">
+                    <div class="fdb-box fdb-touch">
+                    <div class="row">
+                        <div class="col">
+                        <h1>Login</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mt-4">
+                            <input type="text" class="form-control" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <input type="password" class="form-control mb-1" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <button class="btn btn-primary" type="button">Submit</button>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <div v-if="login" class="col-12 col-md-8 col-lg-7 col-md-5 text-center">
+                    <div class="fdb-box fdb-touch">
+                    <div class="row">
+                        <div class="col">
+                        <h1>Register</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col mt-4">
+                        <input type="text" class="form-control" placeholder="Name">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <input type="text" class="form-control" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <input type="password" class="form-control mb-1" placeholder="Password">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                            <div class="col">
+                                <input type="password" class="form-control mb-1" placeholder="Password">
+                            </div>
+                        </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <button v-if="!codesend" v-on:click="submituser" class="btn btn-primary" type="button">Submit</button>
+                            <div v-if="codesend" class="lds-dual-ring"></div>
+                        </div>
+                        
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        var app = new Vue({
+                el: '#app',
+                data: {
+                    message: 'Hello Vue!',
+                    register: false,
+                    login: true,
+                    name: '',
+                    username: '',
+                    email: '',
+                    password: '',
+                    codesend:false,
+                },
+                delimiters: ["${", "}"],
+                methods:{
+                    isregister: function(){
+                        this.register = true;
+                        this.login = false;
+                    },
+                    islogin: function(){
+                        this.register = false;
+                        this.login = true;
+                    },
+                    submituser: function () {
+                        axios.defaults.xsrfCookieName = 'csrftoken'
+                        axios.defaults.xsrfHeaderName = 'X-CSRFToken'
+                        axios.post('http://127.0.0.1:8001/post', {
+                            name: '' + this.name,
+                            username: '' + this.username,
+                            email: '' + this.email,
+                            password: '' + this.password,
+                            }).then(response => {
+                                
+                                console.log(response)
+
+                            })
+                            .catch((err) => {
+                                console.log(err);
+                            })
+                    }
+                }
+        })
+    
+    </script>
+</body>
+</html>   
