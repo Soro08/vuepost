@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-design-blocks/2.0.1/css/froala_blocks.min.css">
+    <link rel="stylesheet" href="/static/toas.css">
     <style>
         .lds-dual-ring {
         display: inline-block;
@@ -96,6 +97,7 @@
                     <div class="row">
                         <div class="col">
                         <h1>Register</h1>
+                            <img v-bind:src="imagePreview" v-show="showPreview" class="img-thumbnail" />
                         </div>
                     </div>
                     <div class="row">
@@ -110,12 +112,17 @@
                     </div>
                     <div class="row mt-4">
                         <div class="col">
-                            <input type="password" v-model="name" class="form-control mb-1" placeholder="Password">
+                            <input type="text" v-model="name" class="form-control mb-1" placeholder="Name">
                         </div>
                     </div>
                     <div class="row mt-4">
                         <div class="col">
-                            <input type="password" v-model="username" class="form-control mb-1" placeholder="Password">
+                            <input type="email" v-model="username" class="form-control mb-1" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="row mt-4">
+                        <div class="col">
+                            <input type="text" v-model="phone" class="form-control mb-1" placeholder="Phone">
                         </div>
                     </div>
                     <div class="row mt-4">
@@ -135,6 +142,7 @@
     <!-- development version, includes helpful console warnings -->
     <script src="/static/vue.js"></script>
     <script src="/static/axios.min.js"></script>
+    <script src="/static/toas.js"></script>
     <script>
 
         var app = new Vue({
@@ -146,9 +154,11 @@
                     name: '',
                     username: '',
                     email: '',
-                    password: '',
+                    phone: '',
                     codesend:false,
                     file :'',
+                    showPreview: false,
+                    imagePreview: ''
                 },
                 delimiters: ["${", "}"],
                 methods:{
@@ -175,7 +185,7 @@
                         formData.append('name', '' + this.name);
                         formData.append('username', '' + this.username);
                         formData.append('email', '' + this.email);
-                        formData.append('password', '' + this.password);
+                        formData.append('phone', '' + this.phone);
                         axios.post('http://127.0.0.1:8000/post',formData,
                         {
                             headers: {
@@ -184,6 +194,19 @@
                         } ).then(response => {
                                 
                                 console.log(response)
+                                if (response.data.succes == true) {
+                                    this.init()
+                                    new Toast({
+                                        message: 'Inscription éffectué avec succès',
+                                        type: 'success'
+                                    });
+                                }else{
+                                    new Toast({
+                                        message: 'Une erreur s\'est produite lors de votre inscription',
+                                        type: 'danger'
+                                    });
+                                }
+                                
 
                             })
                             .catch((err) => {
@@ -192,7 +215,37 @@
                     },
                     handleFileUpload(){
                         this.file = this.$refs.file.files[0];
-                        console.log(this.file)
+                        let reader  = new FileReader();
+
+                        /*
+                        Add an event listener to the reader that when the file
+                        has been loaded, we flag the show preview as true and set the
+                        image to be what was read from the reader.
+                        */
+                        reader.addEventListener("load", function () {
+                            this.showPreview = true;
+                            this.imagePreview = reader.result;
+                        }.bind(this), false);
+
+                        /*
+                        Check to see if the file is not empty.
+                        */
+                        if( this.file ){
+                        /*
+                            Ensure the file is an image file.
+                        */
+                            if ( /\.(jpe?g|png|gif)$/i.test( this.file.name ) ) {
+                                /*
+                                Fire the readAsDataURL method which will read the file in and
+                                upon completion fire a 'load' event which we will listen to and
+                                display the image in the preview.
+                                */
+                                reader.readAsDataURL( this.file );
+                            }
+                        }
+                    },
+                    init(){
+                        this.name = this.username = this.email = this.phone = this.file = ""
                     }
                 }
         })

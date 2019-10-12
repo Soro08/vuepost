@@ -10,12 +10,18 @@ def home(request):
 
 def senddata(request):
     # postdata = json.loads(request.body.decode('utf-8'))
-
+    is_success = False
     img = request.FILES.get('file')
     name = request.POST.get('name')
     username = request.POST.get('username')
-    myimg = MyImage(image = img)
-    myimg.save()
+    phone = request.POST.get('phone')
+    email = request.POST.get('email')
+    try:
+        myimg = MyImage(image = img, name = name, username = username, phone = phone, email = email)
+        myimg.save()
+        is_success = True
+    except:
+        is_success = False
 
     #name = postdata['file']
     datas = {
