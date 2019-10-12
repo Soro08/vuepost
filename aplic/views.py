@@ -30,3 +30,7 @@ def senddata(request):
         'username':username
     }
     return JsonResponse(datas, safe=False)
+
+
+
+# lance python server  python -m http.server 8081 // https://ml5js.github.io/ml5-library/docs/#/reference/image-classifier

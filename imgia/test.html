@@ -1,0 +1,34 @@
+<html>
+
+<head>
+<meta charset="UTF-8">
+<title>Image classification using MobileNet and p5.js</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+<script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
+</head>
+
+<body>
+<h1>Image classification using MobileNet and p5.js</h1>
+
+<img src="image21.jpg" id="myimg" alt="" srcset="" crossOrigin="anonymous">
+
+<script>
+
+    const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
+
+    // When the model is loaded
+    function modelLoaded() {
+        console.log('Model Loaded!');
+        }
+
+        // Make a prediction with a selected image
+        classifier.classify(document.getElementById('myimg'), function(err, results) {
+        console.log(results);
+    });
+
+</script>
+</body>
+
+</html>

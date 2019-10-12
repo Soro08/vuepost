@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
     <link type="text/css" rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/froala-design-blocks/2.0.1/css/froala_blocks.min.css">
     <link rel="stylesheet" href="/static/toas.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
     <style>
         .lds-dual-ring {
         display: inline-block;
@@ -97,7 +100,7 @@
                     <div class="row">
                         <div class="col">
                         <h1>Register</h1>
-                            <img v-bind:src="imagePreview" v-show="showPreview" class="img-thumbnail" />
+                            <img v-bind:src="imagePreview" v-show="showPreview" class="img-thumbnail" id="myimg" />
                         </div>
                     </div>
                     <div class="row">
@@ -143,6 +146,8 @@
     <script src="/static/vue.js"></script>
     <script src="/static/axios.min.js"></script>
     <script src="/static/toas.js"></script>
+    <script src="https://unpkg.com/ml5@0.3.1/dist/ml5.min.js"></script>
+
     <script>
 
         var app = new Vue({
@@ -241,6 +246,18 @@
                                 display the image in the preview.
                                 */
                                 reader.readAsDataURL( this.file );
+
+                                const classifier = ml5.imageClassifier('MobileNet', modelLoaded);
+
+                                // When the model is loaded
+                                function modelLoaded() {
+                                    console.log('Model Loaded!');
+                                    }
+
+                                    // Make a prediction with a selected image
+                                    classifier.classify(document.getElementById('myimg'), function(err, results) {
+                                    console.log(results);
+                                });
                             }
                         }
                     },
@@ -251,5 +268,6 @@
         })
     
     </script>
+
 </body>
 </html>   
